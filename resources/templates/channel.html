@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Channel</title>
+
+</head>
+<body>
+
+	<h1>Channels</h1>
+	<div id="messagesContainer"></div>
+	<div>
+		<textarea id="messageInput"></textarea>
+	</div>
+
+	<script>
+     
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const messageInput = document.getElementById('messageInput');
+            const messagesContainer = document.getElementById('messagesContainer');
+            // Function to render messages
+            const renderMessage = (messages) => {
+            	var html='';
+                for(var i=0;i<messages.length;i++){
+                	html+=messages[i].username + ':'+ messages[i].message +'</br>';
+                }
+                
+                messagesContainer.innerHTML=html;
+                
+               
+            };
+            // Fetch and display previous messages
+            const fetchMessages = () => {
+                fetch('http://localhost:8080/channels/1/messages')
+                    .then(response => response.json())
+                    .then(data => {
+                       // messagesContainer.innerHTML = ''; // Clear the container
+                       renderMessage(data);
+                       // data.forEach(message => {
+                           
+                          /*  console.log("Reached");
+                        	messageElement.textContent = "Hi";
+                        	messagesContainer.appendChild(messageElement); */
+                        //});
+                    })
+                    .catch(error => {
+                        console.error('Error fetching messages:', error);
+                    });
+            };
+
+            messageInput.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent the default action (new line)
+                    const message = messageInput.value.trim();
+                   const username = sessionStorage.getItem("username");
+                   if(username == null){
+                	   window.location.href = 'http://localhost:8080/welcome';
+                       return; 
+                   }
+                   const messages = {
+                    		    
+                    		    "message" : message,
+                    		    "username" : username,
+                    		    "channelId":'1'
+                    		};
+console.log(message)
+                    if (messages) {
+                    	
+                        // Send message to server
+                        fetch('http://localhost:8080/channels/1/message', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(messages),
+                           
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log('Message sent successfully:', data);
+                            // Optionally append the message to the messages container
+                      
+                            const messageElement = document.createElement('div');
+                            messageElement.textContent = `${messages.username}: ${messages.message}`;
+                            messagesContainer.appendChild(messageElement);
+                            messageInput.value = ''; // Clear the textarea
+                        })
+                        .catch(error => {
+                            console.error('Error sending message:', error);
+                        });
+                    }
+                }
+            });
+           
+       
+
+            // Poll for new messages every 500 milliseconds
+           setInterval(fetchMessages, 5000);
+
+        });
+    </script>
+
+</body>
+</html>

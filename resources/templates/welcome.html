@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom Input Prompt</title>
+
+</head>
+<body>
+	<h1>Join a channel</h1>
+	<div>
+		<a href="#" id="generalChannelClick">General</a>
+
+	</div>
+
+
+	<script>
+  console.log("Reached script");    
+var name = prompt("Enter your Name");
+sessionStorage.setItem("username", name);
+console.log(name)
+var users =[] ;
+
+if (name != null && name.trim() !== "") {
+    var user = {
+        "name": name
+    };
+    users.push(user);
+    console.log("User added:", user);
+    fetch('http://localhost:8080/welcome', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('User saved successfully');
+        } else {
+            console.log('Error saving user');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+
+} else {
+    alert("Username looks invalid");
+}
+const generalChannelClick =document.getElementById('generalChannelClick')
+ generalChannelClick.addEventListener('click', (event) => {
+      event.preventDefault(); // Prevent the default link behavior
+      window.location.href = 'http://localhost:8080/channel/1'; // Redirect to channel page
+  });
+    </script>
+</body>
+</html>
