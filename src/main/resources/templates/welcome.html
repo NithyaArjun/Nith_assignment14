@@ -1,21 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Custom Input Prompt</title>
 
 </head>
-<body>
-	<h1>Join a channel</h1>
+<body >
+ <h1>Join a channel</h1>
 	<div>
 		<a href="#" id="generalChannelClick">General</a>
-
 	</div>
+    
 
-
-	<script>
-  console.log("Reached script");    
+	<script >
+	
 var name = prompt("Enter your Name");
 sessionStorage.setItem("username", name);
 console.log(name)
@@ -27,7 +24,7 @@ if (name != null && name.trim() !== "") {
     };
     users.push(user);
     console.log("User added:", user);
-    fetch('http://localhost:8080/welcome', {
+    fetch('http://localhost:8080/welcomeUser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -37,6 +34,7 @@ if (name != null && name.trim() !== "") {
     .then(response => {
         if (response.ok) {
             console.log('User saved successfully');
+            
         } else {
             console.log('Error saving user');
         }
@@ -53,6 +51,10 @@ const generalChannelClick =document.getElementById('generalChannelClick')
       event.preventDefault(); // Prevent the default link behavior
       window.location.href = 'http://localhost:8080/channel/1'; // Redirect to channel page
   });
+
+	
     </script>
+  
+	
 </body>
 </html>

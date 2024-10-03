@@ -13,7 +13,6 @@
 	</div>
 
 	<script>
-     
         document.addEventListener('DOMContentLoaded', (event) => {
             const messageInput = document.getElementById('messageInput');
             const messagesContainer = document.getElementById('messagesContainer');
@@ -94,7 +93,7 @@ console.log(message)
        
 
             // Poll for new messages every 500 milliseconds
-           setInterval(fetchMessages, 5000);
+           setInterval(fetchMessages, 1000);
 
         });
     </script>

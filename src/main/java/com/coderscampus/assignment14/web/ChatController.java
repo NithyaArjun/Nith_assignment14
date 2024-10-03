@@ -1,5 +1,6 @@
 package com.coderscampus.assignment14.web;
 
+import java.net.URI;
 import java.nio.channels.Channels;
 import java.util.Collection;
 import java.util.List;
@@ -7,6 +8,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.hibernate.mapping.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 //import org.springframework.stereotype.Controller;
@@ -41,7 +44,7 @@ public class ChatController {
 	private final AtomicLong idCounter = new AtomicLong();
 	private final AtomicLong channelCounter = new AtomicLong();
 
-	@GetMapping("/welcome")
+	@GetMapping("/welcomeUser")
 
 	public String welcomePage(ModelMap model, HttpSession session) {
 		User user = (User) session.getAttribute("user");
@@ -53,19 +56,25 @@ public class ChatController {
 		model.put("user", user);
 		Collection<com.coderscampus.assignment14.domain.Channels> channels = channelRepository.findAll().values();
 		model.addAttribute("channels", channels);
-		System.out.println("reached here");
+		System.out.println("reached here welcome get controller");
 		return "welcome";
 	}
 
-	@PostMapping("/welcome")
-	public String setName(HttpSession session, @RequestBody User user) {
+	@PostMapping("/welcomeUser")
+	public  ResponseEntity<String> setName(HttpSession session, @RequestBody User user) {
 		User existingUser = userRepository.findByName(user.getName());
 
 		if (existingUser != null) {
 			System.out.println("User already exists: " + existingUser.getName());
 			System.out.println("userid is" + existingUser.getId());
 			session.setAttribute("user", existingUser); // Set existing user in session
-			return "redirect:/channel/1"; // Redirect to the channel
+			//return "redirect:/channel/1"; // Redirect to the channel
+
+	        // Create HttpHeaders with redirect URL
+	       // HttpHeaders headers = new HttpHeaders();
+	       // headers.setLocation(URI.create("/channel/1"));
+	       // return new ResponseEntity<>(headers, HttpStatus.FOUND);
+			 return ResponseEntity.ok("redirect:/channel/1");
 		}
 
 		user.setId(idCounter.incrementAndGet());
@@ -74,7 +83,12 @@ public class ChatController {
 		System.out.println("user id is" + user.getId());
 		session.setAttribute("user", user);
 
-		return "redirect:/channel/1";
+		//return "redirect:/channel/1";
+		 // Redirect to channel 1 after saving the user
+	   // HttpHeaders headers = new HttpHeaders();
+	   // headers.setLocation(URI.create("/channel/1"));
+	   // return new ResponseEntity<>(headers, HttpStatus.FOUND);
+		 return ResponseEntity.ok("redirect:/channel/1");
 	}
 
 	@GetMapping("/channel/{channelId}")
@@ -82,7 +96,7 @@ public class ChatController {
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
 			System.out.println("usr is empty");
-			return "redirect:/welcome";
+			return "redirect:/welcomeUser";
 		}
 //	        com.coderscampus.assignment14.domain.Channels channel = (com.coderscampus.assignment14.domain.Channels) channelRepository.findById(channelId);
 //	        model.addAttribute("chanell", channel);
