@@ -68,35 +68,34 @@ public class ChatController {
 			System.out.println("User already exists: " + existingUser.getName());
 			System.out.println("userid is" + existingUser.getId());
 			session.setAttribute("user", existingUser); // Set existing user in session
-			//return "redirect:/channel/1"; // Redirect to the channel
-
-	        // Create HttpHeaders with redirect URL
-	       // HttpHeaders headers = new HttpHeaders();
-	       // headers.setLocation(URI.create("/channel/1"));
-	       // return new ResponseEntity<>(headers, HttpStatus.FOUND);
+			
+//			user.setId(idCounter.incrementAndGet());
+//			userRepository.save(user);
+//			System.out.println("user not empty" + user.getName());
+//			System.out.println("user id is" + user.getId());
+//			session.setAttribute("user", user);
+			
 			 return ResponseEntity.ok("redirect:/channel/1");
 		}
 
 		user.setId(idCounter.incrementAndGet());
 		userRepository.save(user);
 		System.out.println("user not empty" + user.getName());
-		System.out.println("user id is" + user.getId());
+	System.out.println("user id is" + user.getId());
 		session.setAttribute("user", user);
 
-		//return "redirect:/channel/1";
-		 // Redirect to channel 1 after saving the user
-	   // HttpHeaders headers = new HttpHeaders();
-	   // headers.setLocation(URI.create("/channel/1"));
-	   // return new ResponseEntity<>(headers, HttpStatus.FOUND);
+		
 		 return ResponseEntity.ok("redirect:/channel/1");
+		
 	}
 
 	@GetMapping("/channel/{channelId}")
 	public String viewChannel(@PathVariable Long channelId, HttpSession session, ModelMap model) {
 		User user = (User) session.getAttribute("user");
 		if (user == null) {
-			System.out.println("usr is empty");
+			System.out.println("usr is empty redirecting to welcomeuser");
 			return "redirect:/welcomeUser";
+		
 		}
 //	        com.coderscampus.assignment14.domain.Channels channel = (com.coderscampus.assignment14.domain.Channels) channelRepository.findById(channelId);
 //	        model.addAttribute("chanell", channel);

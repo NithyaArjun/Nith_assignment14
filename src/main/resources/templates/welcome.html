@@ -12,7 +12,7 @@
     
 
 	<script >
-	
+	 document.addEventListener("DOMContentLoaded", function() {
 var name = prompt("Enter your Name");
 sessionStorage.setItem("username", name);
 console.log(name)
@@ -51,7 +51,7 @@ const generalChannelClick =document.getElementById('generalChannelClick')
       event.preventDefault(); // Prevent the default link behavior
       window.location.href = 'http://localhost:8080/channel/1'; // Redirect to channel page
   });
-
+	 });
 	
     </script>
   
